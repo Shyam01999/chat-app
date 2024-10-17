@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
     console.log(`user id ${socket.id}`);
 
     socket.emit('welcome', `Welcome to the server ${socket.id}`);
-    // socket.broadcast.emit('welcome', `welcome user`);
+    // socket.broadcast.emit('welcome', `welcome user`); //to send other socket that are connected
 
 
     socket.on('disconnect', ()=>{
