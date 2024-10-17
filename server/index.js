@@ -1,16 +1,52 @@
 const express = require('express');
 require('dotenv').config();
 const app = express();
+const cors = require('cors');
+const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
+app.use(cors({
+    origin: "http://localhost:5173",
+    method: ['GET', 'POST'],
+    credentials: true
+}))
 
 const authRouter = require('./router/authRouter');
 const catchAsync = require('./utils/catchAsync');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/globalErrorHandler/globalErrorHandler');
 const projectRouter = require('./router/projectRouter');
+const { Server } = require("socket.io");
+const { createServer } = require('node:http');
+const server = createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:5173",
+        method: ['GET', 'POST'],
+        credentials: true
+    }
+});
 
-const PORT = process.env.PORT || 8000;
+
+
+
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    console.log(`user id ${socket.id}`);
+
+    socket.emit('welcome', `Welcome to the server ${socket.id}`);
+    // socket.broadcast.emit('welcome', `welcome user`);
+
+
+    socket.on('disconnect', ()=>{
+        console.log(`User disconnected ${socket.id}`)
+    })
+})
+
+
+
+
 
 
 //all routes will be here
@@ -41,6 +77,6 @@ app.use('*',
 //global error handler
 app.use(globalErrorHandler);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
