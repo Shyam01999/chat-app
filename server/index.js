@@ -28,18 +28,24 @@ const io = new Server(server, {
 });
 
 
-
-
-
 io.on('connection', (socket) => {
     console.log('a user connected');
     console.log(`user id ${socket.id}`);
 
-    socket.emit('welcome', `Welcome to the server ${socket.id}`);
-    // socket.broadcast.emit('welcome', `welcome user`); //to send other socket that are connected
+    // socket.emit('welcome', `Welcome to the server ${socket.id}`);
+    // socket.broadcast.emit('welcome', `${socket.id} joined the server.`); //to send other socket that are connected
+
+    socket.on("message", ({ room, message }) => {
+        console.log("message", message);
+        console.log("room", room)
+        io.to(room).emit('receive-message', message) //to send message to particular user.
+
+        // io.emit('receive-message', data) //it will send message to all socket connected
+        // socket.broadcast.emit('receive-message', data) //it will send message to all socket connected except the
+    })
 
 
-    socket.on('disconnect', ()=>{
+    socket.on('disconnect', () => {
         console.log(`User disconnected ${socket.id}`)
     })
 })
