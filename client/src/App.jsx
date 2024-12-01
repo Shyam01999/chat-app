@@ -10,6 +10,7 @@ const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Chat = lazy(() => import("./pages/Chat"));
 const Group = lazy(() => import("./pages/Group"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 function App() {
   // const socket = io(useMemo(() => "http://localhost:8080", []));
@@ -114,12 +115,12 @@ function App() {
         <Routes>
           <Route path="/" element={<ProtectRoute user={user}/>}>
             <Route index element={<Home />} />
-            <Route path="/chat" element={<Chat />} />
+            <Route path="/chat/:chatId" element={<Chat />} />
             <Route path="/group" element={<Group />} />
           </Route>
 
           <Route path="/login" element={<ProtectRoute user={!user} redirect="/"><Login /></ProtectRoute>} />
-          <Route path="*" element={<h1>Page not Found</h1>} />
+          <Route path="*" element={<NotFoundPage/>} />
         </Routes>
       </BrowserRouter>
     </>
