@@ -1,68 +1,73 @@
-import { useEffect, useMemo, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useEffect, useMemo, useState, lazy } from "react";
+
 import "./App.css";
 import { io } from "socket.io-client";
 import { Grid, TextField, Button, Typography, Stack } from "@mui/material";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+const Home = lazy(() => import ("./pages/Home"));
+const Login = lazy(() => import ("./pages/Login"));
+const Chat = lazy(() => import ("./pages/Chat"));
+const Group = lazy(() => import ("./pages/Group"));
 
 function App() {
-  const socket = io(useMemo(() => "http://localhost:8080", []));
+  // const socket = io(useMemo(() => "http://localhost:8080", []));
 
-  const [data, setData] = useState({
-    message: "",
-    room: "",
-    socketid: "",
-    messages: [],
-  });
+  // const [data, setData] = useState({
+  //   message: "",
+  //   room: "",
+  //   socketid: "",
+  //   messages: [],
+  // });
 
-  useEffect(() => {
-    socket.on("connect", () => {
-      setData((prevData) => ({
-        ...prevData,
-        socketid: socket.id,
-      }));
-      console.log(" socket Connected", socket.id);
-    });
+  // useEffect(() => {
+  //   socket.on("connect", () => {
+  //     setData((prevData) => ({
+  //       ...prevData,
+  //       socketid: socket.id,
+  //     }));
+  //     console.log(" socket Connected", socket.id);
+  //   });
 
-    // socket.on("welcome", (s) => {
-    //   console.log(s);
-    // });
+  //   // socket.on("welcome", (s) => {
+  //   //   console.log(s);
+  //   // });
 
-    socket.on("receive-message", (message) => {
-      setData((prevData) => ({
-        ...prevData,
-        messages: [...prevData.messages, message], 
-      }));
-      console.log(message);
-    });
+  //   socket.on("receive-message", (message) => {
+  //     setData((prevData) => ({
+  //       ...prevData,
+  //       messages: [...prevData.messages, message],
+  //     }));
+  //     console.log(message);
+  //   });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []);
 
-  //function
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  // //function
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  // };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // const socket = io("http://localhost:8080");
-    socket.emit("message", data);
-    setData((prevData) => ({
-      ...prevData,
-      message: "",
-    }));
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   // const socket = io("http://localhost:8080");
+  //   socket.emit("message", data);
+  //   setData((prevData) => ({
+  //     ...prevData,
+  //     message: "",
+  //   }));
+  // };
 
   return (
     <>
-      <Typography variant="h4" color="initial">
+      {/* <Typography variant="h4" color="initial">
         {data.socketid}
       </Typography>
       <form onSubmit={handleSubmit}>
@@ -96,11 +101,20 @@ function App() {
       </form>
       <Stack spacing={2} sx={{ marginTop: 2 }}>
         {data.messages.map((m, i) => (
-          <Typography key={i} variant="h6" color="initial"> {/* Unique key prop */}
+          <Typography key={i} variant="h6" color="initial">
           {m}
         </Typography>
         ))}
-      </Stack>
+      </Stack> */}
+
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/chat" element={<Chat />}></Route>
+          <Route path="/group" element={<Group />}></Route>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

@@ -4,9 +4,9 @@ const {
   DataTypes,
   VIRTUAL
 } = require('sequelize');
-const sequelize = require('../../config/database');
+const sequelize = require('../config/database');
 const bcrypt = require('bcrypt');
-const AppError = require('../../utils/appError');
+const AppError = require('../utils/appError');
 const project = require('./project');
 
 const user = sequelize.define('user', {

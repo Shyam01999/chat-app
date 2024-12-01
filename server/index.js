@@ -1,6 +1,6 @@
 const express = require('express');
-require('dotenv').config();
 const app = express();
+require('dotenv').config();
 const cors = require('cors');
 const PORT = process.env.PORT || 8000;
 
@@ -16,6 +16,8 @@ const catchAsync = require('./utils/catchAsync');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/globalErrorHandler/globalErrorHandler');
 const projectRouter = require('./router/projectRouter');
+const db = require("./models");
+
 const { Server } = require("socket.io");
 const { createServer } = require('node:http');
 const server = createServer(app);
@@ -83,6 +85,18 @@ app.use('*',
 //global error handler
 app.use(globalErrorHandler);
 
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// server.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+// });
+
+db.sequelize
+  .sync({ force: false })
+  .then(() => {
+    server.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+      console.log("Database connected successfully");
+    })
+  })
+  .catch((err) => {
+    console.error("Error syncing database:", err);
+  });

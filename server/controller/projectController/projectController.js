@@ -1,5 +1,5 @@
-const project = require("../../db/models/project");
-const user = require("../../db/models/user");
+const project = require("../../models/project");
+const user = require("../../models/user");
 const AppError = require("../../utils/appError");
 const catchAsync = require("../../utils/catchAsync");
 
