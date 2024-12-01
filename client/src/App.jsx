@@ -4,11 +4,12 @@ import "./App.css";
 import { io } from "socket.io-client";
 import { Grid, TextField, Button, Typography, Stack } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProtectRoute from "./components/protectRoute/ProtectRoute";
 
-const Home = lazy(() => import ("./pages/Home"));
-const Login = lazy(() => import ("./pages/Login"));
-const Chat = lazy(() => import ("./pages/Chat"));
-const Group = lazy(() => import ("./pages/Group"));
+const Home = lazy(() => import("./pages/Home"));
+const Login = lazy(() => import("./pages/Login"));
+const Chat = lazy(() => import("./pages/Chat"));
+const Group = lazy(() => import("./pages/Group"));
 
 function App() {
   // const socket = io(useMemo(() => "http://localhost:8080", []));
@@ -65,6 +66,8 @@ function App() {
   //   }));
   // };
 
+  let user = true;
+
   return (
     <>
       {/* <Typography variant="h4" color="initial">
@@ -109,10 +112,14 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/login" element={<Login />}></Route>
-          <Route path="/chat" element={<Chat />}></Route>
-          <Route path="/group" element={<Group />}></Route>
+          <Route path="/" element={<ProtectRoute user={user}/>}>
+            <Route index element={<Home />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/group" element={<Group />} />
+          </Route>
+
+          <Route path="/login" element={<ProtectRoute user={!user} redirect="/"><Login /></ProtectRoute>} />
+          <Route path="*" element={<h1>Page not Found</h1>} />
         </Routes>
       </BrowserRouter>
     </>
