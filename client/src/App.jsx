@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState, lazy } from "react";
+import { useEffect, useMemo, useState, lazy, Suspense } from "react";
 
 import "./App.css";
 import { io } from "socket.io-client";
 import { Grid, TextField, Button, Typography, Stack } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectRoute from "./components/protectRoute/ProtectRoute";
+import { LayoutLoader } from "./components/layout/Loaders";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -112,16 +113,25 @@ function App() {
       </Stack> */}
 
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<ProtectRoute user={user}/>}>
-            <Route index element={<Home />} />
-            <Route path="/chat/:chatId" element={<Chat />} />
-            <Route path="/group" element={<Group />} />
-          </Route>
+        <Suspense fallback={<LayoutLoader />}>
+          <Routes>
+            <Route path="/" element={<ProtectRoute user={user} />}>
+              <Route index element={<Home />} />
+              <Route path="/chat/:chatId" element={<Chat />} />
+              <Route path="/group" element={<Group />} />
+            </Route>
 
-          <Route path="/login" element={<ProtectRoute user={!user} redirect="/"><Login /></ProtectRoute>} />
-          <Route path="*" element={<NotFoundPage/>} />
-        </Routes>
+            <Route
+              path="/login"
+              element={
+                <ProtectRoute user={!user} redirect="/">
+                  <Login />
+                </ProtectRoute>
+              }
+            />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </>
   );
