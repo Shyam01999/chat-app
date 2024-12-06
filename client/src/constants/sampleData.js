@@ -22,4 +22,22 @@ export const samplechats = [
         groupChat: false,
         members: ["1", "2"]
     },
+];
+
+export const sampleUsers = [
+    {
+        _id: 1,
+        name: "Shyam",
+        avatar: "Avatar1"
+    },
+    {
+        _id: 2,
+        name: "Suman",
+        avatar: "Avatar2"
+    },
+    {
+        _id: 3,
+        name: "Monoj",
+        avatar: "Avatar3"
+    },
 ]

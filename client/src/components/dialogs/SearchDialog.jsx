@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { lazy } from 'react'
 
+const Search = lazy(() => import("../specific/Search"))
 function SearchDialog() {
   return (
-    <div>Search</div>
+    <div><Search/></div>
   )
 }
 
