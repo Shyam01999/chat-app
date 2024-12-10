@@ -1,17 +1,15 @@
+import { Search as SearchIcon } from "@mui/icons-material";
 import {
   Dialog,
   DialogTitle,
   InputAdornment,
   List,
-  ListItem,
   Stack,
-  TextField,
-  Typography,
+  TextField
 } from "@mui/material";
 import React, { useState } from "react";
-import { Search as SearchIcon } from "@mui/icons-material";
-import UserItem from "../shared/UserItem";
 import { sampleUsers } from "../../constants/sampleData";
+import UserItem from "../shared/UserItem";
 
 function Search() {
   const [searchKeyword, setSearchKeyword] = useState("");

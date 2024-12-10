@@ -50,7 +50,7 @@ function Header() {
   };
 
   const handleNotification = () => {
-    isNotification(!isNotification);
+    setIsNotification(!isNotification);
   };
 
   const handleLogout = () => {

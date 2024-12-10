@@ -14,10 +14,11 @@ function UserItem({ user, handler, handleIsLoading }) {
     width: "100%",
     flexGrow: 1,
     display: "-webkit-box",
-    webkitLineClamp: 1,
-    webkitBoxOrient: "vertical",
+    WebkitLineClamp: 1,
+    WebkitBoxOrient: "vertical",
     overflow: "hidden",
     textOverflow: "ellipsis",
+    // whiteSpace: "nowrap",
   };
 
   const AddButtonStyle = {

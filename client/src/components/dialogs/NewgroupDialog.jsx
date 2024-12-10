@@ -1,8 +1,9 @@
 import React from 'react'
 
+
 function NewgroupDialog() {
   return (
-    <div>Newgroup</div>
+    <div>New Group</div>
   )
 }
 

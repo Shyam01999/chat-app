@@ -10,7 +10,7 @@ import Profile from "../specific/Profile";
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
     const { chatId } = useParams();
-    
+
     const handleDeleteChat = (e, _id, groupChat) => {
       console.log("delete chat click");
     };
@@ -58,7 +58,7 @@ const AppLayout = () => (WrappedComponent) => {
               backgroundColor: "rgba(0,0,0,0.85)",
             }}
           >
-            <Profile/>
+            <Profile />
           </Grid>
         </Grid>
       </>
