@@ -58,3 +58,40 @@ export const sampleNotification = [
         _id: "2",
     },
 ]
+
+export const sampleMessage = [
+    {
+        attachments: [
+            {
+                public_id: "aaassas",
+                url: "https://www.w3schools.com"
+            },
+        ],
+        content: "Lauda ka message hai",
+        _id: "sdsdsdssd",
+        sender: {
+            _id: "user._idsdss",
+            name: "Chaman"
+        },
+        chat: "chatId",
+        createdAt: "2024-02-12T10:41:30.630z"
+
+    },
+    {
+        attachments: [
+            {
+                public_id: "aaassas",
+                url: "https://www.w3schools.com"
+            },
+        ],
+        content: "Lauda ka message hai",
+        _id: "sdsdsdssd",
+        sender: {
+            _id: "user._id",
+            name: "Chaman"
+        },
+        chat: "chatId",
+        createdAt: "2024-02-12T10:41:30.630z"
+
+    },
+]

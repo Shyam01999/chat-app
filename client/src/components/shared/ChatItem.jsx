@@ -26,7 +26,7 @@ function ChatItem({
           display: "flex",
           gap: "1rem",
           alignItems: "center",
-          padding: "1rem",
+          padding: "0.6rem",
           backgroundColor: sameSender ? "black" : "unset",
           color: sameSender ? "white" : "unset",
           position: "relative",

@@ -20,18 +20,20 @@ function ChatList({
             ({ chatId }) => chatId === _id
           );
 
-          const isOnline = members?.some((member)=> onlineusers.includes(_id))
-          return <ChatItem 
-          newMessageAlert={newMessageAlert}
-          isOnline={isOnline}
-          avatar={avatar}
-          name={name}
-          _id={_id}
-          key={_id}
-          groupChat={groupChat}
-          sameSender={chatId === _id}
-          handleDeleteChat={handleDeleteChat} 
-          />;
+          const isOnline = members?.some((member) => onlineusers.includes(_id));
+          return (
+            <ChatItem
+              newMessageAlert={newMessageAlert}
+              isOnline={isOnline}
+              avatar={avatar}
+              name={name}
+              _id={_id}
+              key={_id}
+              groupChat={groupChat}
+              sameSender={chatId === _id}
+              handleDeleteChat={handleDeleteChat}
+            />
+          );
         })}
       </Stack>
     </>

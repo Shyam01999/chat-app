@@ -1,4 +1,4 @@
-import { Add as AddIcon } from "@mui/icons-material";
+import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
 import {
   Avatar,
   colors,
@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React, { memo } from "react";
 
-function UserItem({ user, handler, handleIsLoading }) {
+function UserItem({ user, handler, handleIsLoading, isAdded = false }) {
   const usernameStyle = {
     width: "100%",
     flexGrow: 1,
@@ -22,12 +22,13 @@ function UserItem({ user, handler, handleIsLoading }) {
   };
 
   const AddButtonStyle = {
-    bgcolor: "primary.main",
+    bgcolor: isAdded ? "error.main" : "primary.main",
     color: "white",
     "&:hover": {
-      bgcolor: "primary.dark",
+      bgcolor: isAdded ? "error.dark" : "primary.dark",
     },
   };
+
   const { _id, name, avatar } = user;
   return (
     <ListItem>
@@ -48,7 +49,7 @@ function UserItem({ user, handler, handleIsLoading }) {
           disabled={handleIsLoading}
           sx={AddButtonStyle}
         >
-          <AddIcon />
+          {isAdded ? <RemoveIcon /> : <AddIcon />}
         </IconButton>
       </Stack>
     </ListItem>

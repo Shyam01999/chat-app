@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { lazy } from "react";
 
+const NewGroup = lazy(() => import("../specific/NewGroup"));
 
 function NewgroupDialog() {
   return (
-    <div>New Group</div>
-  )
+    <div>
+      <NewGroup/>
+    </div>
+  );
 }
 
 export default NewgroupDialog;
