@@ -64,7 +64,7 @@ export const sampleMessage = [
         attachments: [
             {
                 public_id: "aaassas",
-                url: "https://www.w3schools.com"
+                url: "https://www.w3schools.com/howto/img_avatar.png"
             },
         ],
         content: "Lauda ka message hai",
@@ -81,7 +81,7 @@ export const sampleMessage = [
         attachments: [
             {
                 public_id: "aaassas",
-                url: "https://www.w3schools.com"
+                url: "https://www.w3schools.com/howto/img_avatar.png"
             },
         ],
         content: "Lauda ka message hai",

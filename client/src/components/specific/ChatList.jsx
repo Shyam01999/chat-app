@@ -12,7 +12,7 @@ function ChatList({
 }) {
   return (
     <>
-      <Stack w={w}>
+      <Stack w={w} direction={"column"} overflow={"auto"} height={"100%"}>
         {chats.map((data) => {
           const { avatar, _id, name, groupChat, members } = data;
 

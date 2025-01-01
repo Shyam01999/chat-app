@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React, { memo } from "react";
 
-function UserItem({ user, handler, handleIsLoading, isAdded = false }) {
+function UserItem({ user, handler, handleIsLoading, isAdded = false, styling={}}) {
   const usernameStyle = {
     width: "100%",
     flexGrow: 1,
@@ -37,6 +37,7 @@ function UserItem({ user, handler, handleIsLoading, isAdded = false }) {
         alignItems={"center"}
         spacing={"1rem"}
         width={"100%"}
+        {...styling}
       >
         <Avatar />
         <Typography variant="body1" sx={usernameStyle}>

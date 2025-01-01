@@ -79,7 +79,7 @@ function Chat() {
           </IconButton>
         </Stack>
       </form>
-      <FileMenu />
+      {/* <FileMenu /> */}
     </>
   );
 }
