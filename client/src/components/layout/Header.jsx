@@ -19,11 +19,10 @@ import {
   Logout as LogoutIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import Search from "../dialogs/SearchDialog";
 
-const SearchDialog = lazy(() => import("../dialogs/SearchDialog"));
-const NewgroupDialog = lazy(() => import("../dialogs/NewgroupDialog"));
-const NotificationDialog = lazy(() => import("../dialogs/NotificationDialog"));
+const SearchDialog = lazy(() => import("../specific/Search"));
+const NewgroupDialog = lazy(() => import("../specific/NewGroup"));
+const NotificationDialog = lazy(() => import("../specific/Notifications"));
 
 function Header() {
   const navigate = useNavigate();
