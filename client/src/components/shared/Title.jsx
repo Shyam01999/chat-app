@@ -5,7 +5,9 @@ function Title({ title = "Chat App", description = "This is our Chat App" }) {
   return (
     <Helmet>
       <title>{title}</title>
-      <meta description={description} />
+      <meta name="description" description={description} />
+      <meta name="keyword" content="React chat app, Mern chat app" />
+      <meta charSet="utf-8" />
     </Helmet>
   );
 }

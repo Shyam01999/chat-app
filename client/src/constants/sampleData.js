@@ -88,7 +88,7 @@ export const sampleMessage = [
         _id: "sdsdsdssd",
         sender: {
             _id: "user._id",
-            name: "Chaman"
+            name: "Chaman2"
         },
         chat: "chatId",
         createdAt: "2024-02-12T10:41:30.630z"

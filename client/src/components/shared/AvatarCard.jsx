@@ -1,6 +1,6 @@
 import { Avatar, AvatarGroup, Box, Stack } from "@mui/material";
 import React from "react";
-import { transformImage } from "./RenderAttachment";
+import { transformImage } from "../../lib/features";
 
 function AvatarCard({ avatar = [], max = 4 }) {
   return (
