@@ -26,7 +26,7 @@ import { useState } from "react";
 import { samplechats, sampleUsers } from "../constants/sampleData";
 import UserItem from "../components/shared/UserItem";
 import AvatarCard from "../components/shared/AvatarCard";
-import {Link} from "../components/styles/StyledComponents"; 
+import { Link } from "../components/styles/StyledComponents";
 // import ConfirmDeleteDialog from "../components/dialogs/ConfirmDeleteDialog";
 // import AddMemberDialog from "../components/dialogs/AddMemberDialog";
 
@@ -64,6 +64,8 @@ function Group() {
     };
   }, [chatId]);
 
+  console.log("groupName", groupName);
+
   const navigateBack = () => {
     navigate("/");
   };
@@ -98,6 +100,10 @@ function Group() {
     setIsEdit(false);
     console.log(groupNameUpdatedValue);
   };
+
+  const removeMeberHandler = ()=>{
+    
+  }
 
   const IconBtn = (
     <>
@@ -199,7 +205,6 @@ function Group() {
           display: { xs: "none", sm: "block" },
         }}
         sm={4}
-        bgcolor={bgGradiant}
       >
         <GroupList myGroups={samplechats} chatId={chatId} />
       </Grid>
@@ -288,39 +293,44 @@ function Group() {
         open={isMobileMenuOpen}
         onClose={handleMobileClose}
       >
-        Group list
+        <GroupList w={"50vw"} myGroups={samplechats} chatId={chatId} />
       </Drawer>
     </Grid>
   );
 }
 
-const GroupList = ({ w = "100%", myGroups = [], chatId }) => {return(
-  <Stack
-    width={w}
-    sx={{
-      backgroundImage: bgGradiant,
-      height: "100vh",
-    }}
-  >
-    {myGroups.length > 0 ? (
-      myGroups.map((item) => {
-        return (<GroupListItem
-          group={item}
-          chatId={chatId}
-          key={item._id}
-        ></GroupListItem>);
-      })
-    ) : (
-      <Typography textAlign={"center"} padding={"1rem"}>
-        {" "}
-        No Groups
-      </Typography>
-    )}
-  </Stack>
-)};
+const GroupList = ({ w = "100%", myGroups = [], chatId }) => {
+  return (
+    <Stack
+      width={w}
+      sx={{
+        backgroundImage: bgGradiant,
+        height: "100vh",
+        overflow: "auto",
+      }}
+    >
+      {myGroups.length > 0 ? (
+        myGroups.map((item) => {
+          return (
+            <GroupListItem
+              group={item}
+              chatId={chatId}
+              key={item._id}
+            ></GroupListItem>
+          );
+        })
+      ) : (
+        <Typography textAlign={"center"} padding={"1rem"}>
+          {" "}
+          No Groups
+        </Typography>
+      )}
+    </Stack>
+  );
+};
 
 const GroupListItem = memo(({ group, chatId }) => {
-  const { name, avatar, _id} = group;
+  const { name, avatar, _id } = group;
 
   return (
     <Link

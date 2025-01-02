@@ -25,7 +25,7 @@ function AddMemberDialog({ addMember, isLoadingAddMember, chatId }) {
   };
   return (
     <Dialog open={open} onClose={closeHandler}>
-      <Stack p={"2rem"} spacing={"2rem"} width={"20rem"}>
+      <Stack p={"1rem"} spacing={"2rem"} width={"20rem"}>
         <DialogTitle textAlign={"center"}>Add Member</DialogTitle>
         <Stack spacing={"1rem"}>
           {member.length > 0 ? (

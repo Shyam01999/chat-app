@@ -1,6 +1,6 @@
 export const samplechats = [
     {
-        avatar: ["www.avtar.com"],
+        avatar: ["https://www.w3schools.com/howto/img_avatar.png"],
         name: "Shyam",
         _id: "1",
         groupChat: false,
@@ -8,7 +8,7 @@ export const samplechats = [
     },
 
     {
-        avatar: ["www.avtar1.com"],
+        avatar: ["https://www.w3schools.com/howto/img_avatar.png"],
         name: "Sumit ",
         _id: "2",
         groupChat: false,
@@ -16,12 +16,12 @@ export const samplechats = [
     },
 
     {
-        avatar: ["www.avtar2.com"],
+        avatar: ["https://www.w3schools.com/howto/img_avatar.png"],
         name: "Soumya",
         _id: "3",
         groupChat: false,
         members: ["1", "2"]
-    },
+    }
 ];
 
 export const sampleUsers = [
