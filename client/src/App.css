@@ -40,3 +40,15 @@
 .read-the-docs {
   color: #888;
 } */
+
+.navbar-section.active{
+      background-color:#1c1c1c;
+      color: white;
+      &:hover{
+        color: white
+      }
+}
+
+/* ":hover": {
+  color: "white"
+} */

@@ -12,6 +12,11 @@ const Login = lazy(() => import("./pages/Login"));
 const Chat = lazy(() => import("./pages/Chat"));
 const Group = lazy(() => import("./pages/Group"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+const AdminLogin = lazy(()=> import ('./pages/admin/AdminLogin'));
+const AdminDashboard = lazy(()=> import ('./pages/admin/AdminDashboard'));
+const AdminUser = lazy(()=> import ('./pages/admin/AdminUser'));
+const AdminChat = lazy(()=> import ('./pages/admin/AdminChat'));
+const AdminMessage = lazy(()=> import ('./pages/admin/AdminMessage'));
 
 function App() {
   // const socket = io(useMemo(() => "http://localhost:8080", []));
@@ -129,6 +134,14 @@ function App() {
                 </ProtectRoute>
               }
             />
+
+            <Route path="/admin/login" element={<AdminLogin/>}/>
+            <Route path="/admin/dashboard" element={<AdminDashboard/>}/>
+            <Route path="/admin/user" element={<AdminUser/>}/>
+            <Route path="/admin/chat" element={<AdminChat/>}/>
+            <Route path="/admin/message" element={<AdminMessage/>}/>
+            
+
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
