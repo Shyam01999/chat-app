@@ -122,16 +122,16 @@
 //   module.exports = user;
 
 
-module.exports = (sequelize, DataTypes) =>{
+module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    name:{
-      type:DataTypes.STRING
+    name: {
+      type: DataTypes.STRING
     }
-  }, {freezeTableName:true})
+  }, { freezeTableName: true })
 
-  User.association = (models)=>{
+  User.association = (models) => {
 
   }
 
-  return User; 
+  return User;
 }

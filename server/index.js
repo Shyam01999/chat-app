@@ -20,6 +20,8 @@ const db = require("./models");
 
 const { Server } = require("socket.io");
 const { createServer } = require('node:http');
+const userRoute = require('./router/user.routes');
+
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
@@ -58,6 +60,7 @@ io.on('connection', (socket) => {
 
 
 //all routes will be here
+app.use("/user", userRoute)
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/project', projectRouter);
 
