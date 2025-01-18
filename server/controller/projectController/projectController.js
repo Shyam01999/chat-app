@@ -1,7 +1,7 @@
 const project = require("../../models/project");
 const user = require("../../models/user.model");
 const AppError = require("../../utils/appError");
-const catchAsync = require("../../utils/catchAsync");
+const catchAsync = require("../../utils/TryCatch");
 
 const createProject = catchAsync(
     async (req, res, next) => {

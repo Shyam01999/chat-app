@@ -1,9 +1,9 @@
-const AppError = require("../../utils/appError");
+const AppError = require("../utils/appError");
 
 const sendErrorDev = (err, res) => {
     const statusCode = err.statusCode || 500;
     const status = err.status || 'error';
-    const message = err.message;
+    const message = err.message || "Internal server error";
     const stack = err.stack;
 
     return res.status(statusCode).json({
@@ -17,7 +17,7 @@ const sendErrorDev = (err, res) => {
 const sendErrorProd = (err, res) => {
     const statusCode = err.statusCode || 500;
     const status = err.status || 'error';
-    const message = err.message;
+    const message = err.message || "Internal server error";
     const stack = err.stack;
 
     if (err.isOperational) {
