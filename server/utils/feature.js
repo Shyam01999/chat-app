@@ -20,4 +20,4 @@ const sendToken = (res, code, user, message) => {
 }
 
 
-module.exports = { sendToken }
+module.exports = { sendToken, cookieOptions}

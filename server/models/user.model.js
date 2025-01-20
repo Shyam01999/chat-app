@@ -1,13 +1,6 @@
-// 'use strict';
-// const {
-//   Model,
-//   DataTypes,
-//   VIRTUAL
-// } = require('sequelize');
-// const sequelize = require('../config/database');
-// const bcrypt = require('bcrypt');
-// const AppError = require('../utils/appError');
-// const project = require('./project');
+
+
+const AppError = require("../utils/appError");
 
 // const user = sequelize.define('user', {
 //   id: {
@@ -125,7 +118,33 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     name: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    avatar: {
+      type: DataTypes.JSONB,
+      isValidImageObject(value) {
+        // If it's an array, validate each object in the array
+        if (Array.isArray(value)) {
+          value.forEach(item => {
+            if (!item.public_id || !item.url) {
+              throw new AppError('Each avatar object must contain public_id and url');
+            }
+          });
+        }
+        // If it's a single object, validate that object
+        else if (value && (!value.public_id || !value.url)) {
+          throw new AppError('Avatar object must contain public_id and url');
+        }
+      },
     }
   }, { freezeTableName: true })
 
