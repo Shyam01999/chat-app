@@ -11,7 +11,7 @@ const sendToken = (res, code, user, message) => {
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRES_IN });
     // console.log("token", token)
     res.status(code).cookie("chat-app-token", token, cookieOptions).json({
-        sucess: true,
+        success: true,
         message,
         token,
         // user
@@ -20,4 +20,4 @@ const sendToken = (res, code, user, message) => {
 }
 
 
-module.exports = { sendToken, cookieOptions}
+module.exports = { sendToken, cookieOptions, cookieOptions}

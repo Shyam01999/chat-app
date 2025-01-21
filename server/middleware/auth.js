@@ -17,7 +17,7 @@ const isAuthenticated = TryCatch(async (req, res, next) => {
     if (!user) {
         return next(new AppError(`User with ${decodeToken.id} not exit`, 404))
     }
-
+    
     req.user = user;
 
     next()
