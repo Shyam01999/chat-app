@@ -23,6 +23,7 @@ const { Server } = require("socket.io");
 const { createServer } = require('node:http');
 const userRoute = require('./router/user.routes');
 const TryCatch = require('./utils/TryCatch');
+const chatRoute = require('./router/chat.routes');
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -62,9 +63,10 @@ io.on('connection', (socket) => {
 
 
 //all routes will be here
-app.use("/user", userRoute)
-app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/project', projectRouter);
+app.use("/user", userRoute);
+app.use("/chat", chatRoute);
+// app.use('/api/v1/auth', authRouter);
+// app.use('/api/v1/project', projectRouter);
 
 app.use('*',
     TryCatch(async (req, res, next) => {
