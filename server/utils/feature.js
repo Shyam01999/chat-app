@@ -19,5 +19,9 @@ const sendToken = (res, code, user, message) => {
     })
 }
 
+const emitEvent = (req, event, users, data) => {
+    console.log("Emmiting events")
+}
 
-module.exports = { sendToken, cookieOptions, cookieOptions}
+
+module.exports = { sendToken, cookieOptions, emitEvent}
