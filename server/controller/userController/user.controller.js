@@ -8,17 +8,16 @@ const bcrypt = require("bcrypt");
 const register = TryCatch(async (req, res, next) => {
     try {
         let { name, username, password, avatar } = req.body;
-        // console.log("User model", User)
-        // console.log("register controller");
-        //password hash
-        const saltRound = 10;
-        const hashPassword = await bcrypt.hash(password, saltRound);
-        password = hashPassword;
-
+        
         const existingUser = await User.findOne({ where: { name } });
         if (existingUser) {
             return next(new AppError('User with this name already exists', 400));
         }
+
+        //password hash
+        const saltRound = 10;
+        const hashPassword = await bcrypt.hash(password, saltRound);
+        password = hashPassword;
 
         const newUser = User.create({ name, username, password, avatar });
 
