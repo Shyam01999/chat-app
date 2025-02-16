@@ -20,7 +20,7 @@ const sendToken = (res, code, user, message) => {
 }
 
 const emitEvent = (req, event, users, data) => {
-    console.log("Emmiting events")
+    console.log("Emmiting events", event)
 }
 
 
