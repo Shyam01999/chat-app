@@ -12,7 +12,7 @@ const newGroup = TryCatch(async (req, res, next) => {
     if (members.lenght < 2) {
         return next(new AppError("Group chat must have at least 3 members", 400));
     }
-    console.log("req user", req.user);
+    // console.log("req user", req.user);
 
     const allMembers = [...members, id];
 
