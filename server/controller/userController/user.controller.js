@@ -42,7 +42,6 @@ const login = TryCatch(async (req, res) => {
         const { password: hashedPassword } = userExist;
 
         const passwordCheck = await bcrypt.compare(password, hashedPassword);
-        console.log("passwordCheck", passwordCheck)
         // const userstorepassword = userExist.dataValues.password;
         //const passwordCheck = userstorepassword == password
 
@@ -76,4 +75,13 @@ const logout = TryCatch((req, res, next) => {
     res.status(200).cookie("chat-app-token", "", { ...cookieOptions, maxAge: 0 }).json({ message: "Loggedout successfully" })
 });
 
-module.exports = { login, register, getDetails, logout }
+const searchUser = TryCatch(async(req, res)=>{
+    const {name} = req.query;
+
+    res.status(200).json({
+        success:true,
+        message:name
+    })
+})
+
+module.exports = { login, register, getDetails, logout, searchUser }
