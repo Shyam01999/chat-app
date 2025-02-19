@@ -148,8 +148,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, { freezeTableName: true })
 
-  User.association = (models) => {
-
+  User.associate = (models) => {
+    User.belongsToMany(models.Chat, {
+      through: 'ChatUsers', // Join table (if needed)
+      foreignKey: 'userId',
+      otherKey: 'chatId',
+    });
   }
 
   return User;

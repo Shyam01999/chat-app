@@ -6,14 +6,14 @@ module.exports = (sequelize, DataTypes) => {
         groupChat: DataTypes.BOOLEAN,
         creator: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: false,                                   
             references: {
                 model: "User",
                 key: 'id'
             }
         },
         member: {
-            type: DataTypes.JSONB,
+            type: DataTypes.ARRAY(DataTypes.STRING),
             allowNull: false,
             defaultValue: [],
             validate: {
@@ -28,11 +28,12 @@ module.exports = (sequelize, DataTypes) => {
         freezeTableName: true
     });
 
-    Chat.association = (models) => {
-        Chat.belongsTo(models.User, {
-            foreignKey: 'creator',
-            as: 'chatCreator'
-        })
+    Chat.associate = (models) => {
+        Chat.belongsToMany(models.User, {
+            through: 'ChatUsers', // Join table (if needed)
+            foreignKey: 'chatId',
+            otherKey: 'userId',
+          });
     }
 
     return Chat;
