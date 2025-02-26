@@ -10,7 +10,7 @@ const newGroup = TryCatch(async (req, res, next) => {
     const { name, members } = req.body;
     const { id } = req.user;
 
-    if (members.lenght < 2) {
+    if (members.length < 2) {
         return next(new AppError("Group chat must have at least 3 members", 400));
     }
     // console.log("req user", req.user);
@@ -34,56 +34,63 @@ const newGroup = TryCatch(async (req, res, next) => {
 });
 
 const getMyChats = TryCatch(async (req, res, next) => {
-    // const chats = await Chat.findAll({ members: req.user }).populate("members", "name avatar");
     const { id } = req.user;
+
     const chats = await Chat.findAll({
         where: {
-            member: { 
-                [Op.contains]: [id], 
-            }, // Ensures members exist
-        },
-
-        include: [
-            {
-                model: User, // Assuming you have a User model
-                attributes: ['id', 'name', 'avatar'], // Include only these fields
-                where: {
-                    id: {
-                        [Op.in]: Sequelize.col('Chat.member'), // Filter users whose IDs are in the member array
-                    },
-                },
-                required: false, // Use `false` to include chats even if no matching users are found
+            member: {
+                [Op.contains]: [id.toString()],
             },
-        ],
+        },
     },
     );
 
+    const uniqueMemberIds = [...new Set(chats.flatMap(chat => chat.member))];
+    
 
-    // console.log("chat", chats)
+    const users = await User.findAll({
+        where: {
+            id: {
+                [Op.in]: uniqueMemberIds.map(id => parseInt(id)), // Convert back to integers
+            },
+        },
+        attributes: ["id", "name", "avatar"],
+    });
+
+    const chatsWithUsers = chats.map(chat => {
+        const chatData = chat.toJSON();
+        chatData.member = chatData.member.map(memberId => {
+            const user = users.find(u => u.id === parseInt(memberId));
+            return user ? { id: user.id, name: user.name, avatar: user.avatar } : null;
+        }).filter(Boolean);
+        return chatData;
+    });
+
+    const transformedChats = chatsWithUsers.map(({ id, name, member, groupChat }) => {
+        const otherMember = getOtherMember(member, req.user.id);
+        
+        return {
+            id,
+            groupChat,
+            avatar: groupChat ? member.slice(0, 3).flatMap(({ avatar }) => avatar.map(item => item.url)) : [otherMember.avatar.url],
+            name: groupChat ? name : otherMember.name,
+            members: member.reduce((prev, curr)=>{
+                if(curr.id.toString() !== req.user.id.toString()){
+                    prev.push(curr.id)
+                }
+
+                return prev
+            }, [])
+
+        }
+    });
 
     res.status(200).json({
         success: true,
-        chats: chats,
-    })
+        chats: transformedChats,
+    });
 
-    // const transformedChats = chats.map(({_id, name, members, groupChat})=> {
-    //     const otherMember = getOtherMember(members, req.user);
 
-    //     return {
-    //         _id,
-    //         groupChat,
-    //         avatar: groupChat?members.slice(0, 3).map(({avatar}) => avatar.url):otherMember,
-    //         name:groupChat ? name: otherMember.name,
-    //         members:members.reduce((prev, curr)=> {
-
-    //             if(curr.id.toString() !== req.user.toString()){
-    //                 prev.push(curr.name)
-    //             }
-    //             return prev
-    //         }, [])
-
-    //     }
-    // })
 });
 
 module.exports = {

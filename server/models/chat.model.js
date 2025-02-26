@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         groupChat: DataTypes.BOOLEAN,
         creator: {
             type: DataTypes.INTEGER,
-            allowNull: false,                                   
+            allowNull: false,
             references: {
                 model: "User",
                 key: 'id'
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
             through: 'ChatUsers', // Join table (if needed)
             foreignKey: 'chatId',
             otherKey: 'userId',
-          });
+        });
     }
 
     return Chat;
