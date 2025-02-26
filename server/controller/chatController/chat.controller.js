@@ -147,8 +147,55 @@ const getMyGroups = TryCatch(async (req, res, next) => {
 
 });
 
+const addMembers = TryCatch(async (req, res, next) => {
+    const { chatid, members } = req.body;
+
+    const chat = await Chat.findOne({ where: { id: chatid } });
+
+    if (!chat) {
+        return next(new AppError("Chat not found", 404));
+    }
+
+    if (!chat.groupChat) {
+        return next(new AppError("This is not a group chat", 400));
+    }
+
+    if (chat.creator.toString() !== req.user.id.toString()) {
+        return next(new AppError("You are not allowed to add member", 400));
+    }
+
+    const users = await User.findAll({
+        where: {
+            id: {
+                [Op.in]: members.map(id => parseInt(id)), // Convert back to integers
+            },
+        }
+    });
+
+    const newMemberIds = users.map(user => String(user.id));
+    chat.member = [...chat.member, ...newMemberIds];
+
+    if (chat.member.length > 10) {
+        return next(new AppError("Group member limit reached", 400));
+    }
+
+    await chat.save();
+
+    const allUserName = users.map((i) => i.name).join(",");
+
+    emitEvent(req, ALERT, chat.member, `${allUserName} has been add to the group`)
+
+    emitEvent(req, REFETCH_CHATS, chat.member);
+
+    res.status(200).json({
+        success: true,
+        message: "Members added sucessfully"
+    });
+})
+
 module.exports = {
     newGroup,
     getMyChats,
     getMyGroups,
+    addMembers,
 }

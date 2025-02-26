@@ -32,7 +32,7 @@ const register = TryCatch(async (req, res, next) => {
     }
 })
 
-const login = TryCatch(async (req, res) => {
+const login = TryCatch(async (req, res, next) => {
     const { username, password } = req.body;
 
     const userExist = await User.findOne({ where: { username } });
