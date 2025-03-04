@@ -161,7 +161,7 @@ const addMembers = TryCatch(async (req, res, next) => {
     }
 
     if (chat.creator.toString() !== req.user.id.toString()) {
-        return next(new AppError("You are not allowed to add member", 400));
+        return next(new AppError("You are not allowed to add member", 403));
     }
 
     const users = await User.findAll({
@@ -173,7 +173,8 @@ const addMembers = TryCatch(async (req, res, next) => {
     });
 
     const newMemberIds = users.map(user => String(user.id));
-    chat.member = [...chat.member, ...newMemberIds];
+    const uniqueMembers = chat.member.filter((item) => item !== newMemberIds)
+    chat.member = [...uniqueMembers]
 
     if (chat.member.length > 10) {
         return next(new AppError("Group member limit reached", 400));
@@ -193,9 +194,61 @@ const addMembers = TryCatch(async (req, res, next) => {
     });
 })
 
+const removeMember = TryCatch(async (req, res, next) => {
+    const { userid, chatid } = req.body;
+
+    const [chat, userThatWillBeRemoved] = await Promise.all([
+        Chat.findOne({ where: { id: chatid } }),
+        User.findOne({ where: { id: userid } })
+    ]);
+    
+    if (!chat) {
+        return next(new AppError("Chat not found", 404));
+    }
+
+    if (!chat.groupChat) {
+        return next(new AppError("This is not a group chat", 400));
+    }
+
+    if (chat.creator.toString() !== req.user.id.toString()) {
+        return next(new AppError("You are not allowed to remove member", 403));
+    }
+
+    if(chat.member.length < 3) {
+        return next(new AppError("Group must have at least 3 members", 400));
+    }
+
+    if (!userThatWillBeRemoved) {
+        return next(new AppError("User not exist", 404));
+    }
+
+    chat.member = chat.member.filter((item) => item.toString() != userid.toString());
+
+    await chat.save();
+
+    emitEvent(req, ALERT, chat.member, `${userThatWillBeRemoved.name} has been removed from the group.`)
+
+    emitEvent(req, REFETCH_CHATS, chat.member);
+
+    res.status(200).json({
+        success: true,
+        message: "Members removed sucessfully",
+
+    });
+
+
+
+});
+
+const leaveMember = TryCatch(async (req, res, next) => {
+
+})
+
 module.exports = {
     newGroup,
     getMyChats,
     getMyGroups,
     addMembers,
+    removeMember,
+    leaveMember,
 }
