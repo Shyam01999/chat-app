@@ -173,8 +173,14 @@ const addMembers = TryCatch(async (req, res, next) => {
     });
 
     const newMemberIds = users.map(user => String(user.id));
-    const uniqueMembers = chat.member.filter((item) => item !== newMemberIds)
-    chat.member = [...uniqueMembers]
+    const uniqueMembers = [...chat.member, ...newMemberIds].reduce((acc, id) => {
+        if (!acc.includes(id)) {
+            acc.push(id);
+        }
+        return acc;
+    }, []);
+
+    chat.member = uniqueMembers;
 
     if (chat.member.length > 10) {
         return next(new AppError("Group member limit reached", 400));
@@ -201,7 +207,7 @@ const removeMember = TryCatch(async (req, res, next) => {
         Chat.findOne({ where: { id: chatid } }),
         User.findOne({ where: { id: userid } })
     ]);
-    
+
     if (!chat) {
         return next(new AppError("Chat not found", 404));
     }
@@ -214,7 +220,7 @@ const removeMember = TryCatch(async (req, res, next) => {
         return next(new AppError("You are not allowed to remove member", 403));
     }
 
-    if(chat.member.length < 3) {
+    if (chat.member.length < 3) {
         return next(new AppError("Group must have at least 3 members", 400));
     }
 
@@ -235,12 +241,55 @@ const removeMember = TryCatch(async (req, res, next) => {
         message: "Members removed sucessfully",
 
     });
-
-
-
 });
 
 const leaveMember = TryCatch(async (req, res, next) => {
+    const { id: chatid } = req.params;
+
+    if (!chatid) {
+        return next(new AppError(`Please provide the chat id to leave`, 400))
+    };
+
+    const chat = await Chat.findOne({ where: { id: chatid } });
+
+    if (!chat) {
+        return next(new AppError("Chat not found", 404));
+    }
+
+    if (!chat.groupChat) {
+        return next(new AppError("This is not a group chat", 400));
+    }
+
+    if (chat.creator.toString() !== req.user.id.toString()) {
+        return next(new AppError("You are not allowed to add member", 403));
+    }
+
+    const remainingMembers = chat.member.filter((item) => item.toString() != req.user.id.toString());
+
+    if (remainingMembers.length < 3) {
+        return next(new AppError("Group must have at least 3 members", 400));
+    }
+
+    if (chat.creator.toString() === req.user.id.toString()) {
+        const randomElement = Math.floor(Math.random() * remainingMembers.length)
+        const newCreator = remainingMembers[randomElement];
+        chat.creator = newCreator
+    }
+
+    chat.member = remainingMembers;
+
+    await chat.save();
+
+    emitEvent(req, ALERT, chat.member, `${req.user.name} has left the group.`)
+
+    emitEvent(req, REFETCH_CHATS, chat.member);
+
+    res.status(200).json({
+        success: true,
+        message: "Members leave sucessfully",
+
+    });
+
 
 })
 
