@@ -320,7 +320,7 @@ const sendAttachments = TryCatch(async (req, res, next) => {
         content: "",
         attachments,
         senderId: id,
-        chatId:chatid
+        chatId: chatid
     }
 
     const messageForRealTime = {
@@ -332,7 +332,7 @@ const sendAttachments = TryCatch(async (req, res, next) => {
         },
     };
 
-    
+
 
     emitEvent(req, NEW_ATTACHEMENT, chat.members, {
         message: messageForRealTime,
@@ -350,7 +350,134 @@ const sendAttachments = TryCatch(async (req, res, next) => {
         message: `Attachemnt sent successfully`,
         messages,
     })
+});
+
+const getChatDetails = TryCatch(async (req, res, next) => {
+
+    if (req.query.populate === "true") {
+        const { id: chatid } = req.params;
+
+        if (!chatid) {
+            return next(new AppError(`Please provide the chat id to leave`, 400))
+        };
+
+        const chat = await Chat.findOne({ where: { id: chatid } });
+
+        if (!chat) {
+            return next(new AppError("Chat not found", 404));
+        }
+
+        const users = await User.findAll({
+            where: {
+                id: {
+                    [Op.in]: chat.member.map(id => parseInt(id)), // Convert back to integers
+                },
+            },
+            attributes: ["id", "name", "avatar"],
+        });
+
+        chat.member = users.map(({ id, name, avatar }) => ({ id, name, avatar: avatar[0].url }));
+
+        return res.status(200).json({
+            success: true,
+            chat
+        });
+
+    } else {
+
+        const { id: chatid } = req.params;
+
+        if (!chatid) {
+            return next(new AppError(`Please provide the chat id to leave`, 400))
+        };
+
+        const chat = await Chat.findOne({ where: { id: chatid } });
+
+        if (!chat) {
+            return next(new AppError("Chat not found", 404));
+        }
+
+        return res.status(200).json({
+            success: true,
+            chat
+        });
+    }
+});
+
+const renameGroup = TryCatch(async (req, res, next) => {
+    const { id: chatid } = req.params;
+    
+    const { name } = req.body;
+
+    if (!chatid) {
+        return next(new AppError(`Please provide the group id to rename.`, 400))
+    };
+
+    if (!name) {
+        return next(new AppError(`Please provide the name of the group to update.`, 400))
+    };
+
+    const chat = await Chat.findOne({ where: { id: chatid } });
+
+    if (!chat) {
+        return next(new AppError("Chat not found", 404));
+    }
+
+    if (!chat.groupChat) {
+        return next(new AppError("This is not a group chat", 400));
+    }
+
+    if (chat.creator.toString() !== req.user.id.toString()) {
+        return next(new AppError("You are not allowed to rename this group", 403));
+    }
+
+    chat.name = name;
+
+    await chat.save();
+
+    emitEvent(req, REFETCH_CHATS, chat.member)
+
+    res.status(200).json({
+        success: true,
+        message: "Group renamed successfully",
+        chat
+    })
+});
+
+const deleteGroup = TryCatch(async (req, res, next) => {
+    const { id: chatid } = req.params;
+
+    if (!chatid) {
+        return next(new AppError(`Please provide the group id to delete.`, 400))
+    };
+
+    const chat = await Chat.findOne({ where: { id: chatid } });
+
+    if (!chat) {
+        return next(new AppError("Chat not found", 404));
+    }
+
+    if (!chat.groupChat) {
+        return next(new AppError("This is not a group chat", 400));
+    }
+
+    if (chat.creator.toString() !== req.user.id.toString()) {
+        return next(new AppError("You are not allowed to delete this group", 403));
+    }
+
+    await Message.destroy({ where: { chatId: chatid } });
+
+    await chat.destroy();
+
+    emitEvent(req, REFETCH_CHATS, chat.member)
+
+    res.status(200).json({
+        success: true,
+        message: "Group deleted successfully",
+        chat
+    })
 })
+
 
 module.exports = {
     newGroup,
@@ -360,4 +487,8 @@ module.exports = {
     removeMember,
     leaveMember,
     sendAttachments,
+    getChatDetails,
+    renameGroup,
+    deleteGroup,
+
 }
