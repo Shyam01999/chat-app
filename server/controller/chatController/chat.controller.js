@@ -1,8 +1,8 @@
 const TryCatch = require("../../utils/TryCatch");
-const { Chat, User, Sequelize } = require("../../models");
+const { Chat, User, Message, Sequelize } = require("../../models");
 const AppError = require("../../utils/appError");
 const { emitEvent } = require("../../utils/feature");
-const { ALERT, REFETCH_CHATS } = require("../../constants/events");
+const { ALERT, REFETCH_CHATS, NEW_ATTACHEMENT, NEW_MESSAGE_ALERT } = require("../../constants/events");
 const getOtherMember = require("../../lib/helper");
 const { Op } = require("sequelize");
 
@@ -293,6 +293,65 @@ const leaveMember = TryCatch(async (req, res, next) => {
 
 })
 
+const sendAttachments = TryCatch(async (req, res, next) => {
+    const { chatid } = req.body;
+    const { id, name, avatar } = req.user;
+
+    if (!chatid) {
+        return next(new AppError(`Please provide the chat id to send attachment`, 400))
+    };
+
+    const chat = await Chat.findOne({ where: { id: chatid } });
+    // console.log("chat", chat)
+    if (!chat) {
+        return next(new AppError("Chat not found", 404));
+    }
+
+    const files = req.files || [];
+
+    // if (files.length < 1) {
+    //     return next(new AppError(`Please provide attachments`, 400));
+    // }
+
+    //upload attachements
+    const attachments = [];
+
+    const messageForDb = {
+        content: "",
+        attachments,
+        senderId: id,
+        chatId:chatid
+    }
+
+    const messageForRealTime = {
+        ...messageForDb,
+        sender: {
+            id,
+            name,
+            // avatar: avatar.url,
+        },
+    };
+
+    
+
+    emitEvent(req, NEW_ATTACHEMENT, chat.members, {
+        message: messageForRealTime,
+        chatid
+    });
+
+    emitEvent(req, NEW_MESSAGE_ALERT, chat.members, {
+        chatid
+    });
+
+    const messages = await Message.create(messageForDb);
+
+    res.status(200).json({
+        success: true,
+        message: `Attachemnt sent successfully`,
+        messages,
+    })
+})
+
 module.exports = {
     newGroup,
     getMyChats,
@@ -300,4 +359,5 @@ module.exports = {
     addMembers,
     removeMember,
     leaveMember,
+    sendAttachments,
 }

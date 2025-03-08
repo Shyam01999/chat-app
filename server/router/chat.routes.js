@@ -1,7 +1,7 @@
 const express = require("express");
-const { singleAvatar } = require("../middleware/multer");
+const { singleAvatar, attachmentsMulter } = require("../middleware/multer");
 const { isAuthenticated } = require("../middleware/auth");
-const { newGroup, getMyChats, getMyGroups, addMembers, removeMember, leaveMember } = require("../controller/chatController/chat.controller");
+const { newGroup, getMyChats, getMyGroups, addMembers, removeMember, leaveMember, sendAttachments } = require("../controller/chatController/chat.controller");
 
 const chatRoute = express.Router();
 
@@ -11,5 +11,6 @@ chatRoute.get("/my/groups", isAuthenticated, getMyGroups);
 chatRoute.put("/addmembers", isAuthenticated, addMembers);
 chatRoute.put("/removemember", isAuthenticated, removeMember);
 chatRoute.delete("/leave/:id", isAuthenticated, leaveMember);
+chatRoute.post("/messages", isAuthenticated, attachmentsMulter, sendAttachments)
 
 module.exports = chatRoute
