@@ -1,7 +1,7 @@
 const TryCatch = require("../../utils/TryCatch");
 const { Chat, User, Message, Sequelize } = require("../../models");
 const AppError = require("../../utils/appError");
-const { emitEvent } = require("../../utils/feature");
+const { emitEvent, deleteFilesFromCloudinary } = require("../../utils/feature");
 const { ALERT, REFETCH_CHATS, NEW_ATTACHEMENT, NEW_MESSAGE_ALERT } = require("../../constants/events");
 const getOtherMember = require("../../lib/helper");
 const { Op } = require("sequelize");
@@ -406,7 +406,7 @@ const getChatDetails = TryCatch(async (req, res, next) => {
 
 const renameGroup = TryCatch(async (req, res, next) => {
     const { id: chatid } = req.params;
-    
+
     const { name } = req.body;
 
     if (!chatid) {
@@ -451,7 +451,9 @@ const deleteGroup = TryCatch(async (req, res, next) => {
         return next(new AppError(`Please provide the group id to delete.`, 400))
     };
 
-    const chat = await Chat.findOne({ where: { id: chatid } });
+    const chat = await Chat.findOne({
+        where: { id: chatid },
+    });
 
     if (!chat) {
         return next(new AppError("Chat not found", 404));
@@ -461,13 +463,35 @@ const deleteGroup = TryCatch(async (req, res, next) => {
         return next(new AppError("This is not a group chat", 400));
     }
 
-    if (chat.creator.toString() !== req.user.id.toString()) {
+    if (!chat.groupChat && chat.creator.toString() !== req.user.id.toString()) {
         return next(new AppError("You are not allowed to delete this group", 403));
     }
 
-    await Message.destroy({ where: { chatId: chatid } });
+    if (chat.groupChat && !chat.member.includes(req.user.id.toString())) {
+        return next(new AppError("You are not allowed to delete this chat", 403));
+    }
+    //here we have to delete all messages as well as attachments or files from cloudinary.
 
-    await chat.destroy();
+    const messageWithAttachments = await Message.findAll(
+        {
+            where: { chatId: chatid },
+            attributes: ["attachment"],
+        });
+
+    const publicid = [];
+
+    messageWithAttachments?.forEach(({ attributes }) => {
+        attributes?.forEach(({ public_id }) => {
+            publicid.push(public_id)
+        })
+    });
+
+    await Promise.all([
+        //DeleteFiles from cloudinary
+        deleteFilesFromCloudinary(publicid),
+        await Message.destroy({ where: { chatId: chatid } }),
+        await chat.destroy(),
+    ]);
 
     emitEvent(req, REFETCH_CHATS, chat.member)
 

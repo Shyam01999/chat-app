@@ -9,7 +9,7 @@ const cookieOptions = {
 
 const sendToken = (res, code, user, message) => {
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRES_IN });
-    
+
     res.status(code).cookie("chat-app-token", token, cookieOptions).json({
         success: true,
         message,
@@ -17,11 +17,24 @@ const sendToken = (res, code, user, message) => {
         // user
 
     })
-}
+};
 
 const emitEvent = (req, event, users, data) => {
     console.log("Emmiting events", event)
-}
+};
+
+const deleteFilesFromCloudinary = async (publicid) => {
+    //delete files from cloudinary
+
+    console.log("publicid", publicid);
 
 
-module.exports = { sendToken, cookieOptions, emitEvent}
+};
+
+
+
+
+
+
+
+module.exports = { sendToken, cookieOptions, emitEvent, deleteFilesFromCloudinary }
