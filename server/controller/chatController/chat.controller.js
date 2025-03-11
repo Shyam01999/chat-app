@@ -500,7 +500,44 @@ const deleteGroup = TryCatch(async (req, res, next) => {
         message: "Group deleted successfully",
         chat
     })
-})
+});
+
+const getMessages = TryCatch(async (req, res, next) => {
+    const { id: chatId } = req.params;
+    let { page = 1 } = req.query;
+    page = parseInt(page);
+    const resultPerPage = 20;
+    const skip = (page - 1) * resultPerPage;
+
+    const [messages, totalMessages] = await Promise.all([
+        await Message.findAll(({
+            where: { chatId },
+            offset: skip,
+            limit: resultPerPage
+        })),
+        await Message.count({ where: { chatId } })
+    ])
+
+    if (!messages || messages.length === 0) {
+        return next(new AppError(`No messages found for this chat.`, 404));
+    }
+
+    const totalPages = Math.ceil(totalMessages / resultPerPage);
+
+    res.status(200).json({
+        success: true,
+        data: {
+            messages,
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalMessages,
+                resultPerPage
+            }
+        }
+    })
+
+});
 
 
 module.exports = {
@@ -514,5 +551,7 @@ module.exports = {
     getChatDetails,
     renameGroup,
     deleteGroup,
+    getMessages,
+
 
 }
