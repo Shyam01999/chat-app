@@ -10,11 +10,6 @@ const newGroup = TryCatch(async (req, res, next) => {
     const { name, members } = req.body;
     const { id } = req.user;
 
-    if (members.length < 2) {
-        return next(new AppError("Group chat must have at least 3 members", 400));
-    }
-    // console.log("req user", req.user);
-
     const allMembers = [...members, id];
 
     await Chat.create({
@@ -246,10 +241,6 @@ const removeMember = TryCatch(async (req, res, next) => {
 const leaveMember = TryCatch(async (req, res, next) => {
     const { id: chatid } = req.params;
 
-    if (!chatid) {
-        return next(new AppError(`Please provide the chat id to leave`, 400))
-    };
-
     const chat = await Chat.findOne({ where: { id: chatid } });
 
     if (!chat) {
@@ -296,10 +287,6 @@ const leaveMember = TryCatch(async (req, res, next) => {
 const sendAttachments = TryCatch(async (req, res, next) => {
     const { chatid } = req.body;
     const { id, name, avatar } = req.user;
-
-    if (!chatid) {
-        return next(new AppError(`Please provide the chat id to send attachment`, 400))
-    };
 
     const chat = await Chat.findOne({ where: { id: chatid } });
     // console.log("chat", chat)
@@ -357,10 +344,6 @@ const getChatDetails = TryCatch(async (req, res, next) => {
     if (req.query.populate === "true") {
         const { id: chatid } = req.params;
 
-        if (!chatid) {
-            return next(new AppError(`Please provide the chat id to leave`, 400))
-        };
-
         const chat = await Chat.findOne({ where: { id: chatid } });
 
         if (!chat) {
@@ -387,10 +370,6 @@ const getChatDetails = TryCatch(async (req, res, next) => {
 
         const { id: chatid } = req.params;
 
-        if (!chatid) {
-            return next(new AppError(`Please provide the chat id to leave`, 400))
-        };
-
         const chat = await Chat.findOne({ where: { id: chatid } });
 
         if (!chat) {
@@ -408,14 +387,6 @@ const renameGroup = TryCatch(async (req, res, next) => {
     const { id: chatid } = req.params;
 
     const { name } = req.body;
-
-    if (!chatid) {
-        return next(new AppError(`Please provide the group id to rename.`, 400))
-    };
-
-    if (!name) {
-        return next(new AppError(`Please provide the name of the group to update.`, 400))
-    };
 
     const chat = await Chat.findOne({ where: { id: chatid } });
 
@@ -446,10 +417,6 @@ const renameGroup = TryCatch(async (req, res, next) => {
 
 const deleteGroup = TryCatch(async (req, res, next) => {
     const { id: chatid } = req.params;
-
-    if (!chatid) {
-        return next(new AppError(`Please provide the group id to delete.`, 400))
-    };
 
     const chat = await Chat.findOne({
         where: { id: chatid },

@@ -6,7 +6,6 @@ const AppError = require("../../utils/appError");
 const bcrypt = require("bcrypt");
 
 const register = TryCatch(async (req, res, next) => {
-    try {
         let { name, username, password, avatar } = req.body;
         
         const existingUser = await User.findOne({ where: { name } });
@@ -26,10 +25,6 @@ const register = TryCatch(async (req, res, next) => {
         } else {
             return next(new AppError('Registration failed', 400));
         }
-    }
-    catch (error) {
-        console.log(`Error in register controller ${error}`)
-    }
 })
 
 const login = TryCatch(async (req, res, next) => {
@@ -46,7 +41,7 @@ const login = TryCatch(async (req, res, next) => {
         //const passwordCheck = userstorepassword == password
 
         if (passwordCheck) {
-            return sendToken(res, 201, userExist, "Login sucessfully");
+            return sendToken(res, 200, userExist, "Login sucessfully");
         }
         else {
             return next(new AppError('Invalid Credentials', 400))
