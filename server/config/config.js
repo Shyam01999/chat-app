@@ -7,7 +7,7 @@ module.exports = {
     "database": process.env.DB_NAME,
     "host": process.env.DB_HOST,
     "dialect": process.env.DB_DIALECT,
-    // "logging": process.env.DB_LOGGING,
+    "logging": false
     // "ssl": process.env.DB_SSL,
     // "dialectOptions": {
     //   "ssl": {
