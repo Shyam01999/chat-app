@@ -92,10 +92,6 @@ app.use('*',
 //global error handler
 app.use(globalErrorHandler);
 
-// server.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`);
-// });
-
 db.sequelize
     .sync({ force: false })
     .then(() => {
