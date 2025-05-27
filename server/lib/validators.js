@@ -72,6 +72,10 @@ const getMessagesValidator = () => [
     query("page", "Please Enter page number").notEmpty(),
 ];
 
+const sendFriendRequestValidator = () => [
+    body("userId", "Please Enter User Id").notEmpty(),
+];
+
 
 module.exports = {
     validateHandler,
@@ -86,4 +90,5 @@ module.exports = {
     renameGroupValidator,
     deleteGroupValidator,
     getMessagesValidator,
+    sendFriendRequestValidator,
 }

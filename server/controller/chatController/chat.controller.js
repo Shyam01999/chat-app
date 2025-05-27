@@ -340,7 +340,6 @@ const sendAttachments = TryCatch(async (req, res, next) => {
 });
 
 const getChatDetails = TryCatch(async (req, res, next) => {
-
     if (req.query.populate === "true") {
         const { id: chatid } = req.params;
 
@@ -367,7 +366,6 @@ const getChatDetails = TryCatch(async (req, res, next) => {
         });
 
     } else {
-
         const { id: chatid } = req.params;
 
         const chat = await Chat.findOne({ where: { id: chatid } });
@@ -507,6 +505,8 @@ const getMessages = TryCatch(async (req, res, next) => {
 });
 
 
+
+
 module.exports = {
     newGroup,
     getMyChats,
@@ -519,6 +519,4 @@ module.exports = {
     renameGroup,
     deleteGroup,
     getMessages,
-
-
 }

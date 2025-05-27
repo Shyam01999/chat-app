@@ -13,7 +13,7 @@ chatRoute.put("/addmembers", isAuthenticated, addMembersValidator(), validateHan
 chatRoute.put("/removemember", isAuthenticated, removeMemberValidator(), validateHandler, removeMember);
 chatRoute.delete("/leave/:id", isAuthenticated, leaveMemberValidator(), validateHandler, leaveMember);
 chatRoute.post("/messages", isAuthenticated, attachmentsMulter, sendAttachmentsValidator(), validateHandler, sendAttachments);
-chatRoute.get("/messages/:id", isAuthenticated, getMessagesValidator(), validateHandler, getMessages)
+chatRoute.get("/messages/:id", isAuthenticated, getMessagesValidator(), validateHandler, getMessages);
 chatRoute.route("/:id")
     .get(isAuthenticated, getChatDetailsValidator(), validateHandler, getChatDetails)
     .put(isAuthenticated, renameGroupValidator(), validateHandler, renameGroup)
